@@ -1,0 +1,3 @@
+TARGET_GITHUB_REPO=https://github.com/AdventureX-26-ZMU-Studio/Intro.git
+TARGET_CNB_SLUG=buzhi/ZMU/Introduction
+MAIN_BRANCH=main

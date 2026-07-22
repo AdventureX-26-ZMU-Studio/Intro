@@ -1,122 +1,46 @@
-# Welcome to CNB Cloud Dev 👋
+# ZMU Introduction
 
-欢迎使用 CNB 云开发环境！这是一个为你准备好的云端开发工作空间。
+CNB + GitHub 双备份标准仓库。Fork 即用，`git push origin` 一次推到两个远端。
 
-## 🚀 CNB 平台简介
-
-CNB（Cloud Native Builder）是一个现代化的云端开发平台，提供以下核心功能：
-
-### 核心特性
-
-- **☁️ 云端开发环境** - 在浏览器中即可获得完整的开发环境，无需本地配置
-- **🔧 开发容器** - 基于 Docker 容器的隔离环境，预装常用开发工具
-- **🌐 公网访问** - 一键将本地服务暴露到公网，方便预览和分享
-- **🤖 AI 辅助编程** - 内置 AI 助手，帮助你编写、调试和优化代码
-- **📦 项目模板** - 提供多种项目模板，快速启动新项目
-- **🔄 Git 集成** - 无缝连接 GitHub/GitLab 等代码托管平台
-
----
-
-## 📖 cnb-cli 使用指南
-
-`cnb-cli` 是 CNB 平台的命令行工具，让你更高效地管理云端开发环境。
-
-### 常用命令
-
-#### 查看帮助
-```bash
-cnb --help
-cnb <command> --help
-```
-
-#### 端口转发（将本地服务暴露到公网）
-```bash
-# 转发单个端口
-cnb forward <port>
-
-# 示例：转发前端开发服务器
-cnb forward 3000
-cnb forward 8080
-```
-
-#### 浏览器自动化
-```bash
-# 启动浏览器容器（用于截图、测试等）
-cnb browser start
-
-# 查看浏览器状态
-cnb browser status
-
-# 停止浏览器
-cnb browser stop
-```
-
-#### 工作空间管理
-```bash
-# 查看当前工作空间信息
-cnb workspace info
-
-# 列出工作空间
-cnb workspace list
-```
-
-### 实用场景
-
-| 场景 | 命令 |
-|------|------|
-| 预览 React/Vue 项目 | `cnb forward 3000` |
-| 预览静态文件服务器 | `cnb forward 8080` |
-| 分享 API 服务 | `cnb forward 3001` |
-| 运行端到端测试 | `cnb browser start` |
-
----
-
-## 🎯 快速开始
-
-### 1. 启动一个简单的开发服务器
+## Quick Setup
 
 ```bash
-# Python 简单服务器
-python -m http.server 8080
+# 1. 安装 CLI
+brew install cnb gh
 
-# Node.js 项目
-npm install
-npm run dev
+# 2. 登录双端
+cnb login && gh auth login
+
+# 3. 配置身份
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+
+# 4. 克隆并配置
+git clone https://cnb.cool/buzhi/ZMU/Introduction.git
+cd Introduction
+./scripts/setup-sync.sh
 ```
 
-### 2. 获取公网访问地址
+之后 `git push origin main` 同时推送到 CNB 和 GitHub。
 
-```bash
-cnb forward 3000  # 或你的服务端口
-```
+## Sync Pipeline
 
-### 3. 开始编码
+| 触发端 | 检查端 | 差异时 |
+|--------|--------|--------|
+| CNB push | GitHub | CNB 创建 `sync/github-<sha>` 分支 |
+| GitHub push | CNB | GitHub 创建 `sync/cnb-<sha>` 分支 |
 
-在左侧文件浏览器中选择文件，或使用终端进行开发。
+配置文件：`.sync-config`  
+CNB 管道：`.cnb.yml`  
+GitHub 管道：`.github/workflows/sync-check.yml`
 
----
+## For Fork Users
 
-## 💡 小贴士
+1. 在 CNB 和 GitHub 上分别 fork 本仓库
+2. 运行 `./scripts/setup-sync.sh`，输入你 fork 后的仓库地址
+3. 提交 `.sync-config` 的改动
+4. 在 GitHub Settings → Secrets 中添加 `CNB_TOKEN`
 
-- 💾 你的代码会自动保存在云端，刷新页面不会丢失
-- 🔗 使用 `cnb forward` 获得的公网链接可以分享给他人预览
-- 📱 支持移动端访问，随时随地查看你的项目
-- 🎨 AI 助手可以帮你写代码、调试问题、解释代码逻辑
+## Team Collaboration
 
----
-
-## 📚 更多资源
-
-- [CNB 官方文档](https://cnb.cool/docs)
-- [常见问题](https://cnb.cool/faq)
-- [更新日志](https://cnb.cool/changelog)
-
----
-
-<div align="center">
-
-**Happy Coding! 🎉**
-
-如有问题，随时向 AI 助手提问。
-
-</div>
+详见 [CONTRIBUTING.md](./CONTRIBUTING.md)

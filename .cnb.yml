@@ -5,10 +5,9 @@ main:
         image: alpine/git:latest
       stages:
         - script: |
-            apk add --no-cache curl
+            . ./.sync-config
             echo "=== GitHub sync check ==="
-            GH_REPO="https://github.com/AdventureX-26-ZMU-Studio/Intro.git"
-            GH_SHA=$(git ls-remote $GH_REPO refs/heads/main | awk '{print $1}')
+            GH_SHA=$(git ls-remote "$TARGET_GITHUB_REPO" "refs/heads/$MAIN_BRANCH" | awk '{print $1}')
             echo "GitHub: $GH_SHA"
             echo "CNB:    $CNB_COMMIT"
             if [ -z "$GH_SHA" ]; then
