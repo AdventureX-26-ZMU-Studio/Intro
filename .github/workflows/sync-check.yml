@@ -1,0 +1,39 @@
+name: Sync Check
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  check-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check CNB repo
+        run: |
+          CNB_URL="https://cnb:${{ secrets.CNB_TOKEN }}@cnb.cool/buzhi/ZMU/Introduction.git"
+          echo "=== CNB sync check ==="
+          CNB_SHA=$(git ls-remote "$CNB_URL" refs/heads/main | awk '{print $1}')
+          echo "CNB:    $CNB_SHA"
+          echo "GitHub: ${{ github.sha }}"
+          if [ -z "$CNB_SHA" ]; then
+            echo "Failed to fetch CNB"
+            exit 0
+          fi
+          if [ "$CNB_SHA" != "${{ github.sha }}" ]; then
+            BRANCH="sync/cnb-${CNB_SHA:0:8}"
+            if ! git ls-remote --exit-code origin "$BRANCH" > /dev/null 2>&1; then
+              git config user.name "GitHub Sync"
+              git config user.email "sync@github.com"
+              git branch "$BRANCH" "${{ github.sha }}"
+              git push origin "$BRANCH"
+              echo "Created branch: $BRANCH"
+            else
+              echo "Branch $BRANCH already exists"
+            fi
+          else
+            echo "Both in sync, skipped"
+          fi
